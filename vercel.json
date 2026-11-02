@@ -2,15 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "hichat_project/wsgi.py",
-      "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.10" }
+      "src": "config/wsgi.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "hichat_project/wsgi.py"
+      "dest": "config/wsgi.py"
     }
   ]
 }
