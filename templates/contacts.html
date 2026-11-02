@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block breadcrumbs %}Contacts{% endblock %}
+
+{% block content %}
+<div class="card border-0 shadow-sm rounded-4 p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Contacts</h4>
+            <p class="text-muted small mb-0">Манай системд бүртгэлтэй хэрэглэгчид</p>
+        </div>
+        <button class="btn btn-primary rounded-pill px-4">
+            <i class="bi bi-person-plus me-1"></i> Add Contact
+        </button>
+    </div>
+
+    <!-- Contacts Grid -->
+    <div class="row g-4">
+        {% for p in profiles %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card border border-light shadow-sm rounded-4 h-100 p-3 hover-shadow transition">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="avatar bg-danger text-white d-flex align-items-center justify-content-center rounded-circle fw-bold fs-5" style="width: 50px; height: 50px;">
+                        {{ p.user.username|slice:":1"|upper }}
+                    </div>
+                    <div class="overflow-hidden">
+                        <h6 class="fw-bold mb-0 text-dark text-truncate">{{ p.user.username }}</h6>
+                        <small class="text-muted d-block text-truncate">{{ p.user.email|default:"No email" }}</small>
+                    </div>
+                </div>
+
+                <div class="bg-light p-2 rounded-3 mb-3">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle mb-1">
+                        {{ p.status|default:"Available" }}
+                    </span>
+                    <p class="small text-secondary mb-0 text-truncate">
+                        {{ p.bio|default:"No bio provided yet." }}
+                    </p>
+                </div>
+
+                <div class="mt-auto d-flex gap-2">
+                    <a href="{% url 'messages_with_user' p.user.id %}" class="btn btn-sm btn-primary flex-grow-1 rounded-pill">
+                        <i class="bi bi-chat-dots me-1"></i> Message
+                    </a>
+                    <button class="btn btn-sm btn-light rounded-circle" title="View Profile">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center text-muted py-5">
+            <i class="bi bi-people fs-1 d-block mb-2 text-secondary"></i>
+            <p>Одоогоор өөр харилцах хэрэглэгч олдсонгүй.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

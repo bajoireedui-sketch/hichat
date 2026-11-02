@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block breadcrumbs %}Messages{% endblock %}
+
+{% block content %}
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="row g-0">
+        <!-- Зүүн талын ярианы жагсаалт -->
+        <div class="col-lg-4 border-end bg-white" style="min-height: 600px;">
+            <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">Messages</h5>
+                <button class="btn btn-sm btn-light rounded-circle"><i class="bi bi-plus-lg"></i></button>
+            </div>
+            <div class="p-3 border-bottom">
+                <div class="input-group search-bar">
+                    <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control bg-light border-0 shadow-none" placeholder="Search chats...">
+                </div>
+            </div>
+
+            <!-- Баазаас ирсэн хэрэглэгчдийн жагсаалт -->
+            <div class="list-group list-group-flush">
+                {% for u in users %}
+                <a href="{% url 'messages_with_user' u.id %}" class="list-group-item list-group-item-action border-0 px-3 py-3 mb-1 rounded {% if u == active_user %}active bg-light{% endif %}">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar bg-danger text-white me-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px; font-weight: bold;">
+                            {{ u.username|slice:":1"|upper }}
+                        </div>
+                        <div class="flex-grow-1 overflow-hidden">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <h6 class="mb-0 fw-bold text-dark">{{ u.username }}</h6>
+                                <span class="text-muted extra-small">Active</span>
+                            </div>
+                            <p class="mb-0 text-muted small text-truncate">Click to view messages...</p>
+                        </div>
+                    </div>
+                </a>
+                {% empty %}
+                <div class="p-3 text-muted text-center small">Хэрэглэгч олдсонгүй</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Баруун талын чатлах хэсэг -->
+        <div class="col-lg-8 d-flex flex-column bg-light" style="min-height: 600px;">
+            {% if active_user %}
+            <!-- Чатны дээд хэсэг (Header) -->
+            <div class="p-3 border-bottom bg-white d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="avatar bg-danger text-white me-2 d-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px; font-weight: bold;">
+                        {{ active_user.username|slice:":1"|upper }}
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0">{{ active_user.username }}</h6>
+                        <small class="text-success extra-small">● Active now</small>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-light me-1"><i class="bi bi-telephone"></i></button>
+                    <button class="btn btn-sm btn-light me-1"><i class="bi bi-camera-video"></i></button>
+                    <button class="btn btn-sm btn-light"><i class="bi bi-three-dots-vertical"></i></button>
+                </div>
+            </div>
+
+            <!-- Мессежүүд харагдах хэсэг -->
+            <div class="chat-messages p-4 flex-grow-1 overflow-auto" id="msg-container" style="height: 450px;">
+                {% for msg in messages %}
+                    {% if msg.sender == request.user %}
+                        <!-- Миний явуулсан мессеж -->
+                        <div class="d-flex justify-content-end mb-3">
+                            <div class="bg-primary text-white p-3 rounded-4 shadow-sm" style="max-width: 70%;">
+                                <p class="mb-1">{{ msg.content }}</p>
+                                <div class="text-white-50 extra-small text-end">{{ msg.timestamp|date:"H:i" }}</div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- Нөгөө хүний явуулсан мессеж -->
+                        <div class="d-flex mb-3">
+                            <div class="avatar bg-danger text-white me-2 flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 32px; height: 32px; font-weight: bold;">
+                                {{ msg.sender.username|slice:":1"|upper }}
+                            </div>
+                            <div class="bg-white border p-3 rounded-4 shadow-sm" style="max-width: 70%;">
+                                <p class="mb-1 text-dark">{{ msg.content }}</p>
+                                <div class="text-muted extra-small">{{ msg.timestamp|date:"H:i" }}</div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% empty %}
+                    <div class="text-center text-muted my-auto pt-5" id="no-msg-placeholder">
+                        <i class="bi bi-chat-dots fs-1 d-block mb-2 text-secondary"></i>
+                        <p>Одоогоор мессеж байхгүй байна. Анхны мессежээ бичээрэй!</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Мессеж бичих хэсэг -->
+            <div class="p-3 bg-white border-top">
+                <form class="d-flex align-items-center gap-2" id="chat-form" method="POST">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-light"><i class="bi bi-paperclip"></i></button>
+                    <input type="text" name="content" id="chat-input" class="form-control border-0 bg-light shadow-none" placeholder="Type a message..." autocomplete="off" required>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill"></i></button>
+                </form>
+            </div>
+            {% else %}
+            <div class="my-auto text-center text-muted p-5">
+                <i class="bi bi-chat-left-text fs-1 d-block mb-2"></i>
+                <h5>Чатлах хэрэглэгч сонгогдоогүй байна</h5>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Скроллыг автоматаар хамгийн доод хэсэгт аваачих
+    const msgContainer = document.getElementById('msg-container');
+    if (msgContainer) {
+        msgContainer.scrollTop = msgContainer.scrollHeight;
+    }
+
+    // AJAX-аар мессеж илгээх
+    const chatForm = document.getElementById('chat-form');
+    if (chatForm) {
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const content = input.value.trim();
+            if (!content) return;
+
+            const formData = new FormData(chatForm);
+
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'ok') {
+                    const placeholder = document.getElementById('no-msg-placeholder');
+                    if (placeholder) placeholder.remove();
+
+                    // Шинэ мессежийг дэлгэцэнд шууд нэмэх
+                    const html = `
+                        <div class="d-flex justify-content-end mb-3">
+                            <div class="bg-primary text-white p-3 rounded-4 shadow-sm" style="max-width: 70%;">
+                                <p class="mb-1">${data.content}</p>
+                                <div class="text-white-50 extra-small text-end">${data.timestamp}</div>
+                            </div>
+                        </div>
+                    `;
+                    msgContainer.insertAdjacentHTML('beforeend', html);
+                    input.value = '';
+                    msgContainer.scrollTop = msgContainer.scrollHeight;
+                }
+            });
+        });
+    }
+</script>
+{% endblock %}

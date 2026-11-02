@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hichat</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar (Зүүн талын цэс) -->
+        <div class="sidebar-wrapper bg-light border-end" id="sidebar-wrapper">
+            <div class="sidebar-heading px-4 py-3 d-flex align-items-center">
+                <i class="bi bi-chat-square-dots-fill text-primary fs-3 me-2"></i>
+                <span class="fs-4 fw-bold">Hichat</span>
+            </div>
+            
+            <div class="px-3 mb-3">
+                <div class="p-2 border rounded bg-white d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-warning text-white rounded p-1 me-2 fw-bold px-2">S</div>
+                        <div>
+                            <div class="fw-bold small">Studio workspace</div>
+                            <div class="text-muted extra-small">Personal space</div>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-down text-muted small"></i>
+                </div>
+            </div>
+
+            <!-- Зүүн талын цэсний холбоосууд -->
+            <div class="list-group list-group-flush px-2">
+                <a href="{% url 'inbox' %}" class="list-group-item list-group-item-action bg-transparent rounded mb-1 {% if request.resolver_match.url_name == 'inbox' %}active{% endif %}">
+                    <i class="bi bi-inbox me-2"></i> Inbox <span class="badge bg-primary rounded-pill float-end">8</span>
+                </a>
+                <a href="{% url 'messages' %}" class="list-group-item list-group-item-action bg-transparent rounded mb-1 {% if request.resolver_match.url_name == 'messages' %}active{% endif %}">
+                    <i class="bi bi-chat-dots me-2"></i> Messages <span class="badge bg-primary rounded-pill float-end">3</span>
+                </a>
+                <a href="{% url 'groups' %}" class="list-group-item list-group-item-action bg-transparent rounded mb-1 {% if request.resolver_match.url_name == 'groups' %}active{% endif %}">
+                    <i class="bi bi-people me-2"></i> Groups
+                </a>
+                <a href="{% url 'contacts' %}" class="list-group-item list-group-item-action bg-transparent rounded mb-1 {% if request.resolver_match.url_name == 'contacts' %}active{% endif %}">
+                    <i class="bi bi-person-lines-fill me-2"></i> Contacts
+                </a>
+
+                <div class="text-uppercase text-muted extra-small fw-bold px-3 mt-4 mb-2 d-flex justify-content-between align-items-center">
+                    <span>Your Groups</span>
+                    <i class="bi bi-plus"></i>
+                </div>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent border-0 small py-1">
+                    <span class="dot bg-primary me-2"></span> Design collective
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent border-0 small py-1">
+                    <span class="dot bg-success me-2"></span> Weekend people
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-transparent border-0 small py-1">
+                    <span class="dot bg-warning me-2"></span> Book club
+                </a>
+            </div>
+
+            <div class="sidebar-footer px-3 py-3 border-top mt-auto">
+                <a href="#" class="d-flex align-items-center text-decoration-none text-dark mb-2 small">
+                    <i class="bi bi-person-plus me-2"></i> Invite people
+                </a>
+                <a href="{% url 'settings' %}" class="d-flex align-items-center text-decoration-none text-dark small mb-3">
+                    <i class="bi bi-gear me-2"></i> Settings
+                </a>
+                <div class="d-flex align-items-center justify-content-between pt-2 border-top">
+                    <div class="d-flex align-items-center">
+                        <div class="avatar me-2">I</div>
+                        <div>
+                            <div class="fw-bold small">Ireedui</div>
+                            <div class="text-success extra-small">● Available</div>
+                        </div>
+                    </div>
+                    <i class="bi bi-chevron-down text-muted small"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper" class="w-100">
+            <!-- Topbar (Дээд талын хайлтын хэсэг) -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 py-2">
+                <div class="container-fluid p-0">
+                    <div class="text-muted small">Your workspace / <span class="fw-semibold text-dark">{% block breadcrumbs %}Inbox{% endblock %}</span></div>
+                    
+                    <div class="d-flex align-items-center">
+                        <div class="input-group search-bar me-3">
+                            <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" class="form-control bg-light border-0 shadow-none" placeholder="Search anything... ⌘K">
+                        </div>
+                        <i class="bi bi-question-circle text-muted fs-5 me-3"></i>
+                        <i class="bi bi-bell text-muted fs-5"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Үндсэн хуудасны контент орох хэсэг -->
+            <div class="container-fluid p-4">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

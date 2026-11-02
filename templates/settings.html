@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block breadcrumbs %}Settings{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Зүүн талын Тохиргооны категорууд -->
+    <div class="col-lg-3 mb-4">
+        <div class="bg-white border rounded shadow-sm p-2">
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action border-0 rounded active fw-semibold mb-1">
+                    <i class="bi bi-person me-2"></i> Profile
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 rounded text-muted mb-1">
+                    <i class="bi bi-bell me-2"></i> Notifications
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 rounded text-muted mb-1">
+                    <i class="bi bi-shield-lock me-2"></i> Security
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 rounded text-muted mb-1">
+                    <i class="bi bi-palette me-2"></i> Appearance
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Баруун талын Тохиргооны форм -->
+    <div class="col-lg-9">
+        <div class="bg-white border rounded shadow-sm p-4">
+            <h4 class="fw-bold mb-1">Profile Settings</h4>
+            <p class="text-muted small mb-4">Update your personal profile information and avatar.</p>
+
+            <form>
+                <!-- Avatar хэсэг -->
+                <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+                    <div class="avatar bg-primary text-white me-3" style="width: 64px; height: 64px; font-size: 24px;">I</div>
+                    <div>
+                        <button type="button" class="btn btn-sm btn-outline-primary me-2">Change photo</button>
+                        <button type="button" class="btn btn-sm btn-light text-danger">Remove</button>
+                        <div class="text-muted extra-small mt-1">JPG, GIF or PNG. Max size 2MB.</div>
+                    </div>
+                </div>
+
+                <!-- Мэдээллийн талбарууд -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Display Name</label>
+                        <input type="text" class="form-control" value="Ireedui">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Email address</label>
+                        <input type="email" class="form-control" value="ireedui@example.com">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Bio</label>
+                    <textarea class="form-control" rows="3" placeholder="Write a short bio about yourself...">IT & AI Student | Passionate about building awesome web products.</textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold">Status</label>
+                    <select class="form-select">
+                        <option selected>Available</option>
+                        <option>Busy</option>
+                        <option>Away</option>
+                        <option>Offline</option>
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                    <button type="button" class="btn btn-light">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
