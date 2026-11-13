@@ -1,163 +1,148 @@
 {% extends 'base.html' %}
-
 {% block breadcrumbs %}Messages{% endblock %}
 
 {% block content %}
-<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-    <div class="row g-0">
-        <!-- Зүүн талын ярианы жагсаалт -->
-        <div class="col-lg-4 border-end bg-white" style="min-height: 600px;">
-            <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                <h5 class="fw-bold mb-0">Messages</h5>
-                <button class="btn btn-sm btn-light rounded-circle"><i class="bi bi-plus-lg"></i></button>
-            </div>
-            <div class="p-3 border-bottom">
-                <div class="input-group search-bar">
-                    <span class="input-group-text bg-light border-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control bg-light border-0 shadow-none" placeholder="Search chats...">
-                </div>
-            </div>
-
-            <!-- Баазаас ирсэн хэрэглэгчдийн жагсаалт -->
-            <div class="list-group list-group-flush">
-                {% for u in users %}
-                <a href="{% url 'messages_with_user' u.id %}" class="list-group-item list-group-item-action border-0 px-3 py-3 mb-1 rounded {% if u == active_user %}active bg-light{% endif %}">
-                    <div class="d-flex align-items-center">
-                        <div class="avatar bg-danger text-white me-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px; font-weight: bold;">
-                            {{ u.username|slice:":1"|upper }}
-                        </div>
-                        <div class="flex-grow-1 overflow-hidden">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <h6 class="mb-0 fw-bold text-dark">{{ u.username }}</h6>
-                                <span class="text-muted extra-small">Active</span>
-                            </div>
-                            <p class="mb-0 text-muted small text-truncate">Click to view messages...</p>
-                        </div>
-                    </div>
-                </a>
-                {% empty %}
-                <div class="p-3 text-muted text-center small">Хэрэглэгч олдсонгүй</div>
-                {% endfor %}
+<div class="chat-shell">
+    <!-- Left: conversation list (Figma: Direct message list) -->
+    <div class="chat-list-pane">
+        <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold mb-0">Messages</h5>
+            <button class="btn btn-sm btn-light rounded-circle" type="button"><i class="bi bi-pencil-square"></i></button>
+        </div>
+        <div class="p-3 border-bottom">
+            <div class="input-group search-bar w-100">
+                <span class="input-group-text"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" class="form-control shadow-none" placeholder="Search chats...">
             </div>
         </div>
-
-        <!-- Баруун талын чатлах хэсэг -->
-        <div class="col-lg-8 d-flex flex-column bg-light" style="min-height: 600px;">
-            {% if active_user %}
-            <!-- Чатны дээд хэсэг (Header) -->
-            <div class="p-3 border-bottom bg-white d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center">
-                    <div class="avatar bg-danger text-white me-2 d-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px; font-weight: bold;">
-                        {{ active_user.username|slice:":1"|upper }}
-                    </div>
-                    <div>
-                        <h6 class="fw-bold mb-0">{{ active_user.username }}</h6>
-                        <small class="text-success extra-small">● Active now</small>
-                    </div>
+        <div class="flex-grow-1 overflow-auto">
+            {% for u in users %}
+            <a href="{% url 'messages_with_user' u.id %}"
+               class="d-flex align-items-center gap-3 px-3 py-3 text-decoration-none text-dark border-bottom
+                      {% if u == active_user %}bg-light{% endif %}"
+               style="border-color:#f3f4f6 !important;">
+                <div class="avatar" style="background:{% cycle '#ef4444' '#4f46e5' '#10b981' '#f59e0b' '#8b5cf6' %};color:#fff;">
+                    {{ u.username|slice:":1"|upper }}
                 </div>
-                <div>
-                    <button class="btn btn-sm btn-light me-1"><i class="bi bi-telephone"></i></button>
-                    <button class="btn btn-sm btn-light me-1"><i class="bi bi-camera-video"></i></button>
-                    <button class="btn btn-sm btn-light"><i class="bi bi-three-dots-vertical"></i></button>
-                </div>
-            </div>
-
-            <!-- Мессежүүд харагдах хэсэг -->
-            <div class="chat-messages p-4 flex-grow-1 overflow-auto" id="msg-container" style="height: 450px;">
-                {% for msg in messages %}
-                    {% if msg.sender == request.user %}
-                        <!-- Миний явуулсан мессеж -->
-                        <div class="d-flex justify-content-end mb-3">
-                            <div class="bg-primary text-white p-3 rounded-4 shadow-sm" style="max-width: 70%;">
-                                <p class="mb-1">{{ msg.content }}</p>
-                                <div class="text-white-50 extra-small text-end">{{ msg.timestamp|date:"H:i" }}</div>
-                            </div>
-                        </div>
-                    {% else %}
-                        <!-- Нөгөө хүний явуулсан мессеж -->
-                        <div class="d-flex mb-3">
-                            <div class="avatar bg-danger text-white me-2 flex-shrink-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 32px; height: 32px; font-weight: bold;">
-                                {{ msg.sender.username|slice:":1"|upper }}
-                            </div>
-                            <div class="bg-white border p-3 rounded-4 shadow-sm" style="max-width: 70%;">
-                                <p class="mb-1 text-dark">{{ msg.content }}</p>
-                                <div class="text-muted extra-small">{{ msg.timestamp|date:"H:i" }}</div>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% empty %}
-                    <div class="text-center text-muted my-auto pt-5" id="no-msg-placeholder">
-                        <i class="bi bi-chat-dots fs-1 d-block mb-2 text-secondary"></i>
-                        <p>Одоогоор мессеж байхгүй байна. Анхны мессежээ бичээрэй!</p>
+                <div class="flex-grow-1 overflow-hidden">
+                    <div class="d-flex justify-content-between">
+                        <span class="fw-semibold small">{{ u.username }}</span>
+                        <span class="text-muted extra-small">Active</span>
                     </div>
-                {% endfor %}
-            </div>
-
-            <!-- Мессеж бичих хэсэг -->
-            <div class="p-3 bg-white border-top">
-                <form class="d-flex align-items-center gap-2" id="chat-form" method="POST">
-                    {% csrf_token %}
-                    <button type="button" class="btn btn-light"><i class="bi bi-paperclip"></i></button>
-                    <input type="text" name="content" id="chat-input" class="form-control border-0 bg-light shadow-none" placeholder="Type a message..." autocomplete="off" required>
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill"></i></button>
-                </form>
-            </div>
-            {% else %}
-            <div class="my-auto text-center text-muted p-5">
-                <i class="bi bi-chat-left-text fs-1 d-block mb-2"></i>
-                <h5>Чатлах хэрэглэгч сонгогдоогүй байна</h5>
-            </div>
-            {% endif %}
+                    <div class="text-muted extra-small text-truncate">Click to open conversation</div>
+                </div>
+            </a>
+            {% empty %}
+            <div class="p-4 text-center text-muted small">No users yet</div>
+            {% endfor %}
         </div>
     </div>
+
+    <!-- Right: chat pane -->
+    <div class="chat-main-pane">
+        {% if active_user %}
+        <div class="chat-header">
+            <div class="d-flex align-items-center gap-2">
+                <div class="avatar" style="background:#ef4444;color:#fff;">
+                    {{ active_user.username|slice:":1"|upper }}
+                </div>
+                <div>
+                    <div class="fw-semibold">{{ active_user.username }}</div>
+                    <div class="text-success extra-small">● Active now</div>
+                </div>
+            </div>
+            <div class="d-flex gap-1">
+                <button class="btn btn-sm btn-light rounded-circle" type="button"><i class="bi bi-telephone"></i></button>
+                <button class="btn btn-sm btn-light rounded-circle" type="button"><i class="bi bi-camera-video"></i></button>
+                <button class="btn btn-sm btn-light rounded-circle" type="button"><i class="bi bi-three-dots"></i></button>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="msg-container">
+            {% for msg in messages %}
+                {% if msg.sender == request.user %}
+                <div class="d-flex justify-content-end mb-3">
+                    <div class="bubble-me">
+                        {{ msg.content }}
+                        <div class="text-white-50 extra-small text-end mt-1">{{ msg.timestamp|date:"H:i" }}</div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="d-flex align-items-end gap-2 mb-3">
+                    <div class="avatar sm" style="background:#ef4444;color:#fff;">
+                        {{ msg.sender.username|slice:":1"|upper }}
+                    </div>
+                    <div class="bubble-them">
+                        {{ msg.content }}
+                        <div class="text-muted extra-small mt-1">{{ msg.timestamp|date:"H:i" }}</div>
+                    </div>
+                </div>
+                {% endif %}
+            {% empty %}
+            <div class="text-center text-muted py-5" id="no-msg-placeholder">
+                <i class="bi bi-chat-dots fs-1 d-block mb-2"></i>
+                <p class="mb-0">No messages yet. Say hello!</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="chat-composer">
+            <form class="d-flex align-items-center gap-2" id="chat-form" method="POST">
+                {% csrf_token %}
+                <button type="button" class="btn btn-light rounded-circle"><i class="bi bi-paperclip"></i></button>
+                <button type="button" class="btn btn-light rounded-circle"><i class="bi bi-emoji-smile"></i></button>
+                <input type="text" name="content" id="chat-input" class="form-control bg-light border-0 shadow-none rounded-pill px-3"
+                       placeholder="Type a message..." autocomplete="off" required>
+                <button type="submit" class="btn btn-primary rounded-circle"><i class="bi bi-send-fill"></i></button>
+            </form>
+        </div>
+        {% else %}
+        <div class="flex-grow-1 d-flex align-items-center justify-content-center text-muted">
+            <div class="text-center">
+                <i class="bi bi-chat-left-text fs-1 d-block mb-2"></i>
+                <h5>Select a conversation</h5>
+                <p class="small mb-0">Choose someone from the list to start chatting</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
 <script>
-    // Скроллыг автоматаар хамгийн доод хэсэгт аваачих
-    const msgContainer = document.getElementById('msg-container');
-    if (msgContainer) {
-        msgContainer.scrollTop = msgContainer.scrollHeight;
-    }
+  const msgContainer = document.getElementById('msg-container');
+  if (msgContainer) msgContainer.scrollTop = msgContainer.scrollHeight;
 
-    // AJAX-аар мессеж илгээх
-    const chatForm = document.getElementById('chat-form');
-    if (chatForm) {
-        chatForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const input = document.getElementById('chat-input');
-            const content = input.value.trim();
-            if (!content) return;
-
-            const formData = new FormData(chatForm);
-
-            fetch(window.location.href, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'ok') {
-                    const placeholder = document.getElementById('no-msg-placeholder');
-                    if (placeholder) placeholder.remove();
-
-                    // Шинэ мессежийг дэлгэцэнд шууд нэмэх
-                    const html = `
-                        <div class="d-flex justify-content-end mb-3">
-                            <div class="bg-primary text-white p-3 rounded-4 shadow-sm" style="max-width: 70%;">
-                                <p class="mb-1">${data.content}</p>
-                                <div class="text-white-50 extra-small text-end">${data.timestamp}</div>
-                            </div>
-                        </div>
-                    `;
-                    msgContainer.insertAdjacentHTML('beforeend', html);
-                    input.value = '';
-                    msgContainer.scrollTop = msgContainer.scrollHeight;
-                }
-            });
-        });
-    }
+  const chatForm = document.getElementById('chat-form');
+  if (chatForm) {
+    chatForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const content = input.value.trim();
+      if (!content) return;
+      const formData = new FormData(chatForm);
+      fetch(window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === 'ok') {
+          document.getElementById('no-msg-placeholder')?.remove();
+          msgContainer.insertAdjacentHTML('beforeend', `
+            <div class="d-flex justify-content-end mb-3">
+              <div class="bubble-me">
+                ${data.content}
+                <div class="text-white-50 extra-small text-end mt-1">${data.timestamp}</div>
+              </div>
+            </div>`);
+          input.value = '';
+          msgContainer.scrollTop = msgContainer.scrollHeight;
+        }
+      });
+    });
+  }
 </script>
 {% endblock %}

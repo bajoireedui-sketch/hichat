@@ -1,59 +1,95 @@
 {% extends 'base.html' %}
-
 {% block breadcrumbs %}Contacts{% endblock %}
 
 {% block content %}
-<div class="card border-0 shadow-sm rounded-4 p-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="fw-bold mb-1">Contacts</h4>
-            <p class="text-muted small mb-0">Манай системд бүртгэлтэй хэрэглэгчид</p>
+<div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
+    <div>
+        <h2 class="fw-bold mb-1">People directory</h2>
+        <p class="text-muted mb-0">Find and connect with people in your workspace</p>
+    </div>
+    <button class="btn btn-primary rounded-pill px-4" type="button">
+        <i class="bi bi-person-plus me-1"></i> Invite people
+    </button>
+</div>
+
+<div class="hc-card overflow-hidden">
+    <!-- Tabs (Figma: All / Online / Invitations) -->
+    <div class="d-flex align-items-center justify-content-between px-3 pt-3 border-bottom">
+        <ul class="nav tabs-pills gap-1 mb-0">
+            <li class="nav-item"><a class="nav-link active" href="#">All people</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Online <span class="badge bg-success-subtle text-success ms-1">6</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Invitations</a></li>
+        </ul>
+        <div class="input-group search-bar mb-2" style="width:220px;">
+            <span class="input-group-text"><i class="bi bi-search text-muted"></i></span>
+            <input type="text" class="form-control shadow-none" placeholder="Search people...">
         </div>
-        <button class="btn btn-primary rounded-pill px-4">
-            <i class="bi bi-person-plus me-1"></i> Add Contact
-        </button>
     </div>
 
-    <!-- Contacts Grid -->
-    <div class="row g-4">
-        {% for p in profiles %}
-        <div class="col-md-6 col-lg-4">
-            <div class="card border border-light shadow-sm rounded-4 h-100 p-3 hover-shadow transition">
-                <div class="d-flex align-items-center gap-3 mb-3">
-                    <div class="avatar bg-danger text-white d-flex align-items-center justify-content-center rounded-circle fw-bold fs-5" style="width: 50px; height: 50px;">
-                        {{ p.user.username|slice:":1"|upper }}
-                    </div>
-                    <div class="overflow-hidden">
-                        <h6 class="fw-bold mb-0 text-dark text-truncate">{{ p.user.username }}</h6>
-                        <small class="text-muted d-block text-truncate">{{ p.user.email|default:"No email" }}</small>
-                    </div>
-                </div>
-
-                <div class="bg-light p-2 rounded-3 mb-3">
-                    <span class="badge bg-success-subtle text-success border border-success-subtle mb-1">
-                        {{ p.status|default:"Available" }}
-                    </span>
-                    <p class="small text-secondary mb-0 text-truncate">
-                        {{ p.bio|default:"No bio provided yet." }}
-                    </p>
-                </div>
-
-                <div class="mt-auto d-flex gap-2">
-                    <a href="{% url 'messages_with_user' p.user.id %}" class="btn btn-sm btn-primary flex-grow-1 rounded-pill">
-                        <i class="bi bi-chat-dots me-1"></i> Message
-                    </a>
-                    <button class="btn btn-sm btn-light rounded-circle" title="View Profile">
-                        <i class="bi bi-three-dots-vertical"></i>
-                    </button>
-                </div>
+    <!-- Directory rows -->
+    {% for p in profiles %}
+    <div class="contact-row">
+        <div class="avatar" style="background:{% cycle '#ef4444' '#4f46e5' '#10b981' '#f59e0b' '#8b5cf6' '#06b6d4' %};color:#fff;width:48px;height:48px;font-size:16px;">
+            {{ p.user.username|slice:":1"|upper }}
+            {% if p.status == 'available' %}<span class="status-dot"></span>{% endif %}
+        </div>
+        <div class="flex-grow-1 overflow-hidden">
+            <div class="fw-semibold">{{ p.user.username }}</div>
+            <div class="text-muted small text-truncate">{{ p.bio|default:"No bio yet." }}</div>
+            <div class="mt-1">
+                <span class="badge rounded-pill
+                    {% if p.status == 'available' %}bg-success-subtle text-success
+                    {% elif p.status == 'busy' %}bg-danger-subtle text-danger
+                    {% else %}bg-secondary-subtle text-secondary{% endif %}">
+                    {{ p.status|default:"offline"|title }}
+                </span>
             </div>
         </div>
-        {% empty %}
-        <div class="col-12 text-center text-muted py-5">
-            <i class="bi bi-people fs-1 d-block mb-2 text-secondary"></i>
-            <p>Одоогоор өөр харилцах хэрэглэгч олдсонгүй.</p>
+        <div class="d-flex gap-2">
+            <a href="{% url 'messages_with_user' p.user.id %}" class="btn btn-sm btn-primary rounded-pill px-3">
+                <i class="bi bi-chat-dots me-1"></i> Message
+            </a>
+            <button class="btn btn-sm btn-light rounded-circle" type="button"><i class="bi bi-three-dots"></i></button>
         </div>
-        {% endfor %}
     </div>
+    {% empty %}
+    <!-- Demo contacts when DB empty -->
+    <div class="contact-row">
+        <div class="avatar" style="background:#ef4444;color:#fff;width:48px;height:48px;">B<span class="status-dot"></span></div>
+        <div class="flex-grow-1">
+            <div class="fw-semibold">Boloroo</div>
+            <div class="text-muted small">Designer · Loves soft palettes</div>
+            <span class="badge rounded-pill bg-success-subtle text-success mt-1">Available</span>
+        </div>
+        <a href="{% url 'messages' %}" class="btn btn-sm btn-primary rounded-pill px-3"><i class="bi bi-chat-dots me-1"></i> Message</a>
+    </div>
+    <div class="contact-row">
+        <div class="avatar" style="background:#4f46e5;color:#fff;width:48px;height:48px;">N<span class="status-dot"></span></div>
+        <div class="flex-grow-1">
+            <div class="fw-semibold">Nina</div>
+            <div class="text-muted small">Product · Always sharing references</div>
+            <span class="badge rounded-pill bg-success-subtle text-success mt-1">Available</span>
+        </div>
+        <a href="{% url 'messages' %}" class="btn btn-sm btn-primary rounded-pill px-3"><i class="bi bi-chat-dots me-1"></i> Message</a>
+    </div>
+    <div class="contact-row">
+        <div class="avatar" style="background:#10b981;color:#fff;width:48px;height:48px;">T</div>
+        <div class="flex-grow-1">
+            <div class="fw-semibold">Temuulen</div>
+            <div class="text-muted small">Engineer · Wireframe reviewer</div>
+            <span class="badge rounded-pill bg-secondary-subtle text-secondary mt-1">Away</span>
+        </div>
+        <a href="{% url 'messages' %}" class="btn btn-sm btn-primary rounded-pill px-3"><i class="bi bi-chat-dots me-1"></i> Message</a>
+    </div>
+    <div class="contact-row">
+        <div class="avatar" style="background:#f59e0b;color:#fff;width:48px;height:48px;">A</div>
+        <div class="flex-grow-1">
+            <div class="fw-semibold">Anu</div>
+            <div class="text-muted small">Brand · File sharer extraordinaire</div>
+            <span class="badge rounded-pill bg-success-subtle text-success mt-1">Available</span>
+        </div>
+        <a href="{% url 'messages' %}" class="btn btn-sm btn-primary rounded-pill px-3"><i class="bi bi-chat-dots me-1"></i> Message</a>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}

@@ -1,77 +1,148 @@
 {% extends 'base.html' %}
-
 {% block breadcrumbs %}Groups{% endblock %}
 
 {% block content %}
-<div class="card border-0 shadow-sm rounded-4 p-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="fw-bold mb-1">Group Spaces</h4>
-            <p class="text-muted small mb-0">Багийн болон төслийн бүлэг чатууд</p>
+<div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
+    <div>
+        <h2 class="fw-bold mb-1">Group spaces</h2>
+        <p class="text-muted mb-0">Channels for teams, projects and communities</p>
+    </div>
+    <button class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#createGroupModal">
+        <i class="bi bi-plus-circle me-1"></i> Create group
+    </button>
+</div>
+
+<!-- Featured / open group chat preview (Figma-style) -->
+<div class="chat-shell mb-4" style="min-height:420px;">
+    <div class="chat-list-pane" style="width:260px;">
+        <div class="p-3 border-bottom">
+            <div class="input-group search-bar w-100">
+                <span class="input-group-text"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" class="form-control shadow-none" placeholder="Search groups...">
+            </div>
         </div>
-        <button class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#createGroupModal">
-            <i class="bi bi-plus-circle me-1"></i> Create Group
-        </button>
+        <div class="overflow-auto flex-grow-1">
+            {% for g in groups %}
+            <div class="d-flex align-items-center gap-2 px-3 py-3 border-bottom {% if forloop.first %}bg-light{% endif %}" style="border-color:#f3f4f6 !important;cursor:pointer;">
+                <div class="avatar" style="background:#4f46e5;color:#fff;border-radius:10px;">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <div class="fw-semibold small text-truncate">{{ g.name }}</div>
+                    <div class="text-muted extra-small">{{ g.members.count }} members</div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="p-4 text-center text-muted small">No groups yet — create one!</div>
+            {% endfor %}
+            {% if not groups %}
+            <!-- demo items when empty -->
+            <div class="d-flex align-items-center gap-2 px-3 py-3 border-bottom bg-light" style="border-color:#f3f4f6 !important;">
+                <div class="avatar" style="background:#4f46e5;color:#fff;border-radius:10px;"><i class="bi bi-people-fill"></i></div>
+                <div><div class="fw-semibold small">Design collective</div><div class="text-muted extra-small">12 members</div></div>
+            </div>
+            <div class="d-flex align-items-center gap-2 px-3 py-3 border-bottom" style="border-color:#f3f4f6 !important;">
+                <div class="avatar" style="background:#10b981;color:#fff;border-radius:10px;"><i class="bi bi-people-fill"></i></div>
+                <div><div class="fw-semibold small">Weekend people</div><div class="text-muted extra-small">8 members</div></div>
+            </div>
+            {% endif %}
+        </div>
     </div>
 
-    <!-- Groups Grid -->
-    <div class="row g-4">
-        {% for g in groups %}
-        <div class="col-md-6 col-lg-4">
-            <div class="card border border-light shadow-sm rounded-4 h-100 p-4 hover-shadow transition">
-                <div class="d-flex align-items-center gap-3 mb-3">
-                    <div class="avatar bg-primary text-white d-flex align-items-center justify-content-center rounded-3 fw-bold fs-5" style="width: 48px; height: 48px;">
-                        <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div class="overflow-hidden">
-                        <h6 class="fw-bold mb-0 text-dark text-truncate">{{ g.name }}</h6>
-                        <small class="text-muted d-block">{{ g.members.count }} members</small>
-                    </div>
+    <div class="chat-main-pane">
+        <div class="chat-header">
+            <div class="d-flex align-items-center gap-2">
+                <div class="avatar" style="background:#4f46e5;color:#fff;border-radius:10px;">
+                    <i class="bi bi-people-fill"></i>
                 </div>
-
-                <p class="small text-secondary mb-4 flex-grow-1">
-                    {{ g.description|default:"No description available for this group." }}
-                </p>
-
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary btn-sm rounded-pill flex-grow-1">
-                        Open Group
-                    </button>
+                <div>
+                    <div class="fw-semibold">{% if groups %}{{ groups.0.name }}{% else %}Design collective{% endif %}</div>
+                    <div class="text-muted extra-small">{% if groups %}{{ groups.0.members.count }}{% else %}12{% endif %} members · 3 online</div>
+                </div>
+            </div>
+            <div class="d-flex gap-1">
+                <button class="btn btn-sm btn-light" type="button"><i class="bi bi-person-plus"></i></button>
+                <button class="btn btn-sm btn-light" type="button"><i class="bi bi-three-dots"></i></button>
+            </div>
+        </div>
+        <div class="chat-messages">
+            <div class="d-flex align-items-end gap-2 mb-3">
+                <div class="avatar sm" style="background:#8b5cf6;color:#fff;">N</div>
+                <div class="bubble-them">
+                    <div class="fw-semibold extra-small mb-1">Nina</div>
+                    Added a few references for the new palette 🎨
+                    <div class="text-muted extra-small mt-1">9:32 AM</div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end mb-3">
+                <div class="bubble-me">
+                    Looks great! I'll review this afternoon.
+                    <div class="text-white-50 extra-small text-end mt-1">9:40 AM</div>
+                </div>
+            </div>
+            <div class="d-flex align-items-end gap-2 mb-3">
+                <div class="avatar sm" style="background:#ef4444;color:#fff;">B</div>
+                <div class="bubble-them">
+                    <div class="fw-semibold extra-small mb-1">Boloroo</div>
+                    The softer palette feels just right ✨
+                    <div class="text-muted extra-small mt-1">9:42 AM</div>
                 </div>
             </div>
         </div>
-        {% empty %}
-        <div class="col-12 text-center text-muted py-5">
-            <i class="bi bi-collection fs-1 d-block mb-2 text-secondary"></i>
-            <p>Одоогоор бүлэг чат үүсээгүй байна.</p>
+        <div class="chat-composer">
+            <div class="d-flex align-items-center gap-2">
+                <button type="button" class="btn btn-light rounded-circle"><i class="bi bi-paperclip"></i></button>
+                <input type="text" class="form-control bg-light border-0 shadow-none rounded-pill px-3" placeholder="Message the group...">
+                <button type="button" class="btn btn-primary rounded-circle"><i class="bi bi-send-fill"></i></button>
+            </div>
         </div>
-        {% endfor %}
     </div>
 </div>
 
-<!-- Шинэ Group үүсгэх Modal Цонх -->
+<!-- Group cards grid -->
+<div class="row g-3">
+    {% for g in groups %}
+    <div class="col-md-6 col-lg-4">
+        <div class="hc-card p-3 h-100">
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="avatar" style="background:#4f46e5;color:#fff;border-radius:10px;">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div>
+                    <div class="fw-semibold">{{ g.name }}</div>
+                    <div class="text-muted extra-small">{{ g.members.count }} members</div>
+                </div>
+            </div>
+            <p class="small text-muted mb-3">{{ g.description|default:"No description." }}</p>
+            <button class="btn btn-sm btn-outline-primary rounded-pill w-100" type="button">Open group</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Create modal -->
 <div class="modal fade" id="createGroupModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow rounded-4">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold">Create New Group</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">Create new group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST">
                 {% csrf_token %}
-                <div class="modal-body py-3">
+                <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">Group Name</label>
-                        <input type="text" name="name" class="form-control bg-light border-0 shadow-none" placeholder="e.g. Design Collective" required>
+                        <label class="form-label small fw-semibold">Group name</label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g. Design Collective" required>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">Description</label>
-                        <textarea name="description" class="form-control bg-light border-0 shadow-none" rows="3" placeholder="Briefly describe what this group is for..."></textarea>
+                    <div class="mb-0">
+                        <label class="form-label small fw-semibold">Description</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="What is this group about?"></textarea>
                     </div>
                 </div>
-                <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4">Create</button>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill">Create</button>
                 </div>
             </form>
         </div>

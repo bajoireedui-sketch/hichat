@@ -1,99 +1,123 @@
 {% extends 'base.html' %}
-
 {% block breadcrumbs %}Inbox{% endblock %}
 
 {% block content %}
-<div class="row">
-    <!-- Зүүн талын гол контент -->
+<div class="mb-4">
+    <h2 class="fw-bold mb-1">Good morning, Bat-Ireedui ☀️</h2>
+    <p class="text-muted mb-0">A little catching up. A lot of good conversations.</p>
+</div>
+
+<!-- Stats row (Figma: Inbox overview cards) -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="label">Unread messages</div>
+            <div class="value">8</div>
+            <div class="hint">Across 4 conversations</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="label">Your people</div>
+            <div class="value">24</div>
+            <div class="hint">6 people are online now</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <div class="label">Group spaces</div>
+            <div class="value">3</div>
+            <div class="hint">Ideas are better together</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Conversations -->
     <div class="col-lg-8">
-        <div class="mb-4">
-            <h2 class="fw-bold">Good morning, Ireedui ☀️</h2>
-            <p class="text-muted">A little catching up. A lot of good conversations.</p>
-        </div>
-
-        <!-- Статистик кардууд -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-4">
-                <div class="p-3 bg-white border rounded shadow-sm">
-                    <div class="text-muted small">Unread messages</div>
-                    <div class="fs-3 fw-bold">8</div>
-                    <div class="text-muted extra-small">Across 4 conversations</div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="p-3 bg-white border rounded shadow-sm">
-                    <div class="text-muted small">Your people</div>
-                    <div class="fs-3 fw-bold">24</div>
-                    <div class="text-muted extra-small">6 people are online now</div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="p-3 bg-white border rounded shadow-sm">
-                    <div class="text-muted small">Group spaces</div>
-                    <div class="fs-3 fw-bold">3</div>
-                    <div class="text-muted extra-small">Ideas are better together</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Your conversations жагсаалт -->
-        <div class="bg-white border rounded p-3 shadow-sm">
+        <div class="hc-card p-3 p-md-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold m-0">Your conversations</h5>
-                <i class="bi bi-filter text-muted"></i>
+                <h5 class="fw-bold mb-0">Your conversations</h5>
+                <i class="bi bi-funnel text-muted"></i>
             </div>
             <div class="d-flex gap-2 mb-3">
-                <button class="btn btn-sm btn-light active">All messages</button>
-                <button class="btn btn-sm btn-light text-muted">Unread</button>
-                <button class="btn btn-sm btn-light text-muted">Pinned</button>
+                <button class="filter-btn active" type="button">All messages</button>
+                <button class="filter-btn" type="button">Unread</button>
+                <button class="filter-btn" type="button">Pinned</button>
             </div>
-            
-            <!-- Мессежүүдийн жагсаалт -->
-            <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-0 py-3">
-                    <div class="d-flex align-items-center">
-                        <div class="avatar bg-danger text-white me-3">B</div>
-                        <div>
-                            <div class="fw-bold">Boloroo</div>
-                            <div class="text-muted small">The softer palette feels just right ✨</div>
-                        </div>
+
+            <a href="{% url 'messages' %}" class="conv-item">
+                <div class="avatar" style="background:#ef4444;color:#fff;">B</div>
+                <div class="flex-grow-1 overflow-hidden">
+                    <div class="d-flex justify-content-between">
+                        <span class="fw-semibold">Boloroo</span>
+                        <span class="text-muted extra-small">9:42 AM</span>
                     </div>
-                    <div class="text-end">
-                        <div class="text-muted extra-small">9:42 AM</div>
-                        <span class="badge bg-primary rounded-pill">2</span>
+                    <div class="text-muted small text-truncate">The softer palette feels just right ✨</div>
+                </div>
+                <span class="badge bg-primary rounded-pill">2</span>
+            </a>
+
+            <a href="{% url 'groups' %}" class="conv-item">
+                <div class="avatar" style="background:#4f46e5;color:#fff;border-radius:10px;">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div class="flex-grow-1 overflow-hidden">
+                    <div class="d-flex justify-content-between">
+                        <span class="fw-semibold">Design collective <span class="text-muted">📌</span></span>
+                        <span class="text-muted extra-small">9:32 AM</span>
                     </div>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center px-0 py-3">
-                    <div class="d-flex align-items-center">
-                        <div class="avatar bg-primary text-white me-3">*</div>
-                        <div>
-                            <div class="fw-bold">Design collective <span class="text-muted small">📌</span></div>
-                            <div class="text-muted small">Nina: Added a few references!</div>
-                        </div>
+                    <div class="text-muted small text-truncate">Nina: Added a few references!</div>
+                </div>
+                <span class="badge bg-primary rounded-pill">4</span>
+            </a>
+
+            <a href="{% url 'messages' %}" class="conv-item">
+                <div class="avatar" style="background:#10b981;color:#fff;">T</div>
+                <div class="flex-grow-1 overflow-hidden">
+                    <div class="d-flex justify-content-between">
+                        <span class="fw-semibold">Temuulen</span>
+                        <span class="text-muted extra-small">Yesterday</span>
                     </div>
-                    <div class="text-end">
-                        <div class="text-muted extra-small">9:32 AM</div>
-                        <span class="badge bg-primary rounded-pill">4</span>
+                    <div class="text-muted small text-truncate">Can we review the wireframes tomorrow?</div>
+                </div>
+            </a>
+
+            <a href="{% url 'messages' %}" class="conv-item">
+                <div class="avatar" style="background:#f59e0b;color:#fff;">A</div>
+                <div class="flex-grow-1 overflow-hidden">
+                    <div class="d-flex justify-content-between">
+                        <span class="fw-semibold">Anu</span>
+                        <span class="text-muted extra-small">Mon</span>
                     </div>
-                </a>
-            </div>
+                    <div class="text-muted small text-truncate">Shared a file: brand-guidelines.pdf</div>
+                </div>
+            </a>
         </div>
     </div>
 
-    <!-- Баруун талын хэсэг -->
+    <!-- Right rail -->
     <div class="col-lg-4">
-        <div class="bg-white border rounded p-3 shadow-sm mb-4">
+        <div class="hc-card p-3 mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="fw-bold">Around right now</span>
+                <span class="fw-semibold">Around right now</span>
                 <span class="text-success small">● 6 online</span>
             </div>
-            <p class="text-muted small">A quick help can turn into a great idea.</p>
+            <p class="text-muted small mb-3">A quick help can turn into a great idea.</p>
+            <div class="d-flex gap-2 flex-wrap">
+                <div class="avatar sm" style="background:#ef4444;color:#fff;" title="Boloroo">B</div>
+                <div class="avatar sm" style="background:#4f46e5;color:#fff;" title="Nina">N</div>
+                <div class="avatar sm" style="background:#10b981;color:#fff;" title="Temuulen">T</div>
+                <div class="avatar sm" style="background:#f59e0b;color:#fff;" title="Anu">A</div>
+                <div class="avatar sm" style="background:#8b5cf6;color:#fff;" title="Ganaa">G</div>
+                <div class="avatar sm" style="background:#06b6d4;color:#fff;" title="Sarnai">S</div>
+            </div>
         </div>
 
-        <div class="bg-light border rounded p-3 shadow-sm">
+        <div class="hc-card p-3" style="background:#fffbeb;border-color:#fde68a;">
             <div class="text-warning extra-small fw-bold mb-1">📌 PINNED FOR YOU</div>
-            <h6 class="fw-bold">A fresh start for Hichat</h6>
-            <p class="text-muted small">"Let's make the everyday feel a little more connected..."</p>
+            <h6 class="fw-bold mb-1">A fresh start for Hichat</h6>
+            <p class="text-muted small mb-0">"Let's make the everyday feel a little more connected..."</p>
         </div>
     </div>
 </div>

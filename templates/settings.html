@@ -1,64 +1,77 @@
 {% extends 'base.html' %}
-
 {% block breadcrumbs %}Settings{% endblock %}
 
 {% block content %}
-<div class="row">
-    <!-- Зүүн талын Тохиргооны категорууд -->
-    <div class="col-lg-3 mb-4">
-        <div class="bg-white border rounded shadow-sm p-2">
-            <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action border-0 rounded active fw-semibold mb-1">
-                    <i class="bi bi-person me-2"></i> Profile
-                </a>
-                <a href="#" class="list-group-item list-group-item-action border-0 rounded text-muted mb-1">
-                    <i class="bi bi-bell me-2"></i> Notifications
-                </a>
-                <a href="#" class="list-group-item list-group-item-action border-0 rounded text-muted mb-1">
-                    <i class="bi bi-shield-lock me-2"></i> Security
-                </a>
-                <a href="#" class="list-group-item list-group-item-action border-0 rounded text-muted mb-1">
-                    <i class="bi bi-palette me-2"></i> Appearance
-                </a>
-            </div>
+<div class="mb-4">
+    <h2 class="fw-bold mb-1">Account settings</h2>
+    <p class="text-muted mb-0">Manage your profile, notifications and privacy preferences.</p>
+</div>
+
+<div class="settings-layout">
+    <!-- Left categories (Figma) -->
+    <div class="settings-nav hc-card p-2">
+        <a href="#profile" class="nav-link-item active"><i class="bi bi-person"></i> Profile</a>
+        <a href="#notifications" class="nav-link-item"><i class="bi bi-bell"></i> Notifications</a>
+        <a href="#privacy" class="nav-link-item"><i class="bi bi-shield-check"></i> Privacy</a>
+        <a href="#appearance" class="nav-link-item"><i class="bi bi-palette"></i> Appearance</a>
+        <a href="#devices" class="nav-link-item"><i class="bi bi-laptop"></i> Devices</a>
+        <hr class="my-2">
+        <a href="#" class="nav-link-item text-danger"><i class="bi bi-box-arrow-right"></i> Sign out</a>
+        <div class="mt-4 p-3 rounded-3" style="background:#f0fdf4;">
+            <i class="bi bi-shield-check text-success fs-5"></i>
+            <div class="fw-semibold small mt-2">Your data is protected</div>
+            <div class="text-muted extra-small mt-1">We never sell your personal information.</div>
+            <a href="#" class="extra-small text-success">Privacy policy →</a>
         </div>
     </div>
 
-    <!-- Баруун талын Тохиргооны форм -->
-    <div class="col-lg-9">
-        <div class="bg-white border rounded shadow-sm p-4">
-            <h4 class="fw-bold mb-1">Profile Settings</h4>
-            <p class="text-muted small mb-4">Update your personal profile information and avatar.</p>
+    <!-- Right forms -->
+    <div class="settings-panel">
+        <!-- Profile -->
+        <div class="hc-card p-4 mb-3" id="profile">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Your profile</h5>
+                <span class="text-muted extra-small">Visible to contacts</span>
+            </div>
 
-            <form>
-                <!-- Avatar хэсэг -->
-                <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
-                    <div class="avatar bg-primary text-white me-3" style="width: 64px; height: 64px; font-size: 24px;">I</div>
-                    <div>
-                        <button type="button" class="btn btn-sm btn-outline-primary me-2">Change photo</button>
-                        <button type="button" class="btn btn-sm btn-light text-danger">Remove</button>
-                        <div class="text-muted extra-small mt-1">JPG, GIF or PNG. Max size 2MB.</div>
+            <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                <div class="avatar lg" style="background:#4f46e5;color:#fff;">B</div>
+                <div>
+                    <button type="button" class="btn btn-sm btn-outline-primary me-2">Change photo</button>
+                    <button type="button" class="btn btn-sm btn-light text-danger">Remove</button>
+                    <div class="text-muted extra-small mt-1">JPG, GIF or PNG. Max 2MB.</div>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Display name</label>
+                    <input type="text" class="form-control" value="Bat-Ireedui">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Username</label>
+                    <input type="text" class="form-control" value="batireedui">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="bi bi-envelope text-muted"></i></span>
+                        <input type="email" class="form-control" value="batireedui@example.com">
+                        <span class="input-group-text bg-white text-success"><i class="bi bi-patch-check-fill"></i></span>
                     </div>
                 </div>
-
-                <!-- Мэдээллийн талбарууд -->
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label small fw-semibold">Display Name</label>
-                        <input type="text" class="form-control" value="Ireedui">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label small fw-semibold">Email address</label>
-                        <input type="email" class="form-control" value="ireedui@example.com">
+                <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Location</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="bi bi-geo-alt text-muted"></i></span>
+                        <input type="text" class="form-control" value="Ulaanbaatar, Mongolia">
                     </div>
                 </div>
-
-                <div class="mb-3">
+                <div class="col-12">
                     <label class="form-label small fw-semibold">Bio</label>
-                    <textarea class="form-control" rows="3" placeholder="Write a short bio about yourself...">IT & AI Student | Passionate about building awesome web products.</textarea>
+                    <textarea class="form-control" rows="2">IT & AI Student | Passionate about building awesome web products.</textarea>
                 </div>
-
-                <div class="mb-4">
+                <div class="col-md-6">
                     <label class="form-label small fw-semibold">Status</label>
                     <select class="form-select">
                         <option selected>Available</option>
@@ -67,12 +80,116 @@
                         <option>Offline</option>
                     </select>
                 </div>
+            </div>
+        </div>
 
-                <div class="d-flex justify-content-end gap-2 pt-3 border-top">
-                    <button type="button" class="btn btn-light">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+        <!-- Notifications + Privacy side by side -->
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <div class="hc-card p-4 h-100" id="notifications">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-bell text-primary"></i>
+                        <h6 class="fw-bold mb-0">Notifications</h6>
+                    </div>
+
+                    <div class="pref-row">
+                        <div>
+                            <div class="fw-semibold small">Desktop notifications</div>
+                            <div class="text-muted extra-small">Show alerts on your computer</div>
+                        </div>
+                        <label class="hc-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="pref-row">
+                        <div>
+                            <div class="fw-semibold small">Email digests</div>
+                            <div class="text-muted extra-small">Daily summary of activity</div>
+                        </div>
+                        <label class="hc-switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="pref-row">
+                        <div>
+                            <div class="fw-semibold small">Sound</div>
+                            <div class="text-muted extra-small">Play a sound for new messages</div>
+                        </div>
+                        <label class="hc-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label small fw-semibold">Quiet hours</label>
+                        <select class="form-select form-select-sm">
+                            <option selected>🌙 22:00 – 07:00</option>
+                            <option>Never</option>
+                            <option>Custom…</option>
+                        </select>
+                    </div>
                 </div>
-            </form>
+            </div>
+
+            <div class="col-md-6">
+                <div class="hc-card p-4 h-100" id="privacy">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-shield-check text-primary"></i>
+                        <h6 class="fw-bold mb-0">Privacy</h6>
+                    </div>
+
+                    <div class="pref-row">
+                        <div>
+                            <div class="fw-semibold small">Show online status</div>
+                            <div class="text-muted extra-small">Let others see when you're active</div>
+                        </div>
+                        <label class="hc-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="pref-row">
+                        <div>
+                            <div class="fw-semibold small">Read receipts</div>
+                            <div class="text-muted extra-small">Show when you've read messages</div>
+                        </div>
+                        <label class="hc-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="pref-row">
+                        <div>
+                            <div class="fw-semibold small">Profile discoverable</div>
+                            <div class="text-muted extra-small">Appear in people search</div>
+                        </div>
+                        <label class="hc-switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label small fw-semibold">Who can message you</label>
+                        <select class="form-select form-select-sm">
+                            <option selected>Everyone</option>
+                            <option>Contacts only</option>
+                            <option>Nobody</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="text-success small d-flex align-items-center gap-1">
+                <i class="bi bi-check-circle-fill"></i> All changes saved
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-light">Cancel</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
     </div>
 </div>
